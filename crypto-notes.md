@@ -20,3 +20,17 @@
     - ^: performs the XOR function
     - bytearray(): mutable bytes that supports .append(int)
     - .hex(): converts bytes into hex
+
+### Challenge 3
+**Goal:** Given a hex string that has been XORed with a single character, figure out that character and decrypt the message
+- Devise a scoring method for english plaintext to see which one is a real message.
+- There are 256 possible values for a single byte
+- Useful Python tools:
+    - dict(): makes an empty dictionary
+    - d[key] = value: to make new key or update key value
+    - .decode(errors="replace"): Makes it so an unknown characters get replaced with � instead of breaking
+    -chr(int): turns a single byte-int into a character
+- Scoring for Plaintext:
+    - +1 for alphabet characters and space
+    - -1 for byte > 127: anything above 127 isn't commonly used characters
+    - -1 for byte < 32: anything below 32 is non plaintext stuff
