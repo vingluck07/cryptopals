@@ -2,7 +2,7 @@
 
 ## Set 1
 ### Challenge 1
-**Goal:** Take the hex string given and produce the matching base64 string. (hex string -> raw bytes -> base64 string)
+**Goal:** Write a function that takes the hex string given and produce the matching base64 string. (hex string -> raw bytes -> base64 string)
 - It's impoortant to only work on raw bytes since cyphers work on the bytes themselves (ex. XORing two hex strings will produce garbage but XORing the bytes they represent gives the correct answer.)
 - Some numbers to remember:
     - 8 bits in a byte
@@ -13,3 +13,10 @@
     - base64.b64encode(b): turns bytes into base64 (returns bytes)
     - .decode(): turns result into a string
     - bytes.hex(), base64.b64decode(): do the opposite of above, useful for checking work
+
+### Challenge 2
+**Goal:** Write a function that takes 2 equal length buffers and produces the XOR
+- Useful Python tools:
+    - ^: performs the XOR function
+    - bytearray(): mutable bytes that supports .append(int)
+    - .hex(): converts bytes into hex
