@@ -18,7 +18,7 @@ def score_bytes(bytestr):
         elif byte < 32:
             # not plaintext
             score -= 1
-        if byte == 32 or 65 <= byte <= 90 or 97 <= byte <= 122:
+        elif byte == 32 or 65 <= byte <= 90 or 97 <= byte <= 122:
             # english alphabet letters (and space)
             score += 1
     return score
