@@ -38,11 +38,11 @@ def find_key(hexstr):
         if candidates[key] > max_score:
             best_key = key
             max_score = candidates[key]
-    return best_key
+    return best_key, max_score
 
 if __name__ == "__main__":
     ciphertext = "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"
-    key = find_key(ciphertext)
+    key = find_key(ciphertext)[0]
     print(chr(key))
     print(xor_one_byte(ciphertext, key).decode())
 
