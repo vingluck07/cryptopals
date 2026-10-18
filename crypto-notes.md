@@ -46,3 +46,11 @@
     - `for line in f:`: iterates over each line
     - `.strip()`: removes the \n from a line
     - `from ... import ...: allows reuse of functions from challenge 3
+
+### Challenge 5
+**Goal:** Encrypt a long message with a repeating key XOR.
+- In repeating-key XOR, each byte of the key will be sequentially applied to each byte of the plaintext (aka Vigenere cipher in XOR form)
+- it is weaker because the repeating key... repeats
+- Useful Python tools:
+    - `.encode()`: turns plaintext into bytes
+    - `.hex()`: turns result into a hexstring
