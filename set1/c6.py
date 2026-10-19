@@ -14,21 +14,19 @@ def hamming_dist(str1, str2):
 
 def find_keysize(cipher):
     """find the most likely KEYSIZE for ciphertext"""
-    min_dist = MAX_KEYSIZE
+    min_dist = float("inf")
     best_keysize = 0
 
-    for keysize in range (2, MAX_KEYSIZE + 1):
-        str1 = cipher[0:keysize]
-        str2 = cipher[keysize:2*keysize]
-        str3 = cipher[2*keysize:3*keysize]
-        str4 = cipher[3*keysize:4*keysize]
+    for keysize in range(2, MAX_KEYSIZE + 1):
+        str_list = []
+        dist_list = []
+        for i in range(len(cipher) // keysize):
+            str_list.append(cipher[i*keysize:(i+1)*keysize])
 
-        dist1 = hamming_dist(str1, str2)
-        dist2 = hamming_dist(str2, str3)
-        dist3 = hamming_dist(str3, str4)
-        dist4 = hamming_dist(str1, str4)
+        for i in range(len(str_list) - 1):
+            dist_list.append(hamming_dist(str_list[i], str_list[i+1]))
 
-        norm_avg = ((dist1 + dist2 + dist3 + dist4) / 4) / keysize
+        norm_avg = (sum(dist_list) / len(dist_list)) / keysize
 
         if norm_avg < min_dist:
             min_dist = norm_avg
@@ -36,22 +34,50 @@ def find_keysize(cipher):
 
     return best_keysize
 
+def decrypt_block_XOR(cipher, key):
+    """takes a ciphertext and returns the plaintext decrypted with the key
+    
+    Args:
+        cipher: ciphertext in bytes
+        key: key as str
+    Returns:
+        decrypted plaintext as str    
+    """
+    key = key.encode()
+
+    decryptbytes = bytearray()
+    i = 0
+    for byte in cipher:
+        decryptbytes.append(byte ^ key[i])
+        i = (i + 1) % len(key)
+    
+    return decryptbytes.decode()
+
 def decrypt_XOR(cipher):
-    """finds and returns the decrypted plaintext and the key"""
+    """finds the most likely key and decrypts the cipher with it
+
+    Args: 
+        cipher: ciphertext in bytes
+    Returns: 
+        (plaintext, key) tuple, both as str
+    """
+    #input: ciphertext, output: tuple(plaintext, key)
     keysize = find_keysize(cipher)
 
     block_list = []
     for i in range(keysize):
-        block_list.append(cipher[i:keysize])
+        block_list.append(cipher[i::keysize])
 
     key = str()
+    plaintext = str()
     for i in block_list:
-        key = key + str(find_key(i.hex())[0])
+        key = key + chr(find_key(i.hex())[0])
 
-    print(key.decode())
+    return decrypt_block_XOR(cipher, key), key
 
 if __name__ == "__main__":
     with open("c6-data.txt") as f:
         cipher = base64.b64decode(f.read())
 
-    print(decrypt_XOR(cipher))
+    decrypted = decrypt_XOR(cipher)
+    print(f"{decrypted[0]}\n{decrypted[1]}")
