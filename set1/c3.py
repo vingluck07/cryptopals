@@ -24,7 +24,7 @@ def score_bytes(bytestr):
     return score
 
 def find_key(hexstr):
-    """finds a key that returns the highest score"""
+    """finds a key that returns the key and the highest score"""
     candidates = dict()
 
     for i in range(256):
