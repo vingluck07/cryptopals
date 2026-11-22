@@ -81,7 +81,7 @@
     - crypto library is required. pycryptodome is a good option
     - `AES.new(key, AES.MODE_ECB)`: creates a cipher object (usually named cipher)
     - `.decode(ciphertext)`: Used on the cipher object, returns plaintext in bytes
-- Takeaways: basic decryption is ez with pycryptodome
+- Takeaways: basic decryption is easy with pycryptodome
 
 ### Challenge 8
 **Goal:** In a file full of hex-encoded ciphertexts, figure out which one is encrypted with ECB.
@@ -93,3 +93,13 @@
     - `bytes.fromhex()`: to get bytes from the hex
     - `set()`: removes duplicates, subtract from original to get # of duplicates
 - Takeaways: Repetition makes ECB easy to detect but it still is hard to crack since its encrypted with AES. Without the key, there are far too many possibilities to realistically be able to brute force. This challenge just shows how you can see where plaintext is repeated in ECB
+
+## Set 2
+### Challenge 9
+**Goal:** Write a function that pads a byte string to a given block length
+- AES only works on full 16 byte blocks so the number of missing bytes gets padded. If the plaintext is exactly 16 bytes, add a full block of padding.
+- Padding has to be reversible, so each byte of padding will have a value equal to the number of bytes padded. A depadding function can just read the last byte and know how much padding to remove
+- Useful Python tools:
+    - `bytes([n])`: a single byte with the value n. (`bytes(n)` would be incorrect and gives n zero bytes)
+    - `bytes * int`: repeats a byte string
+    - `+`: to concatenate bytes
