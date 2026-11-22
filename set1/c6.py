@@ -1,5 +1,5 @@
 import base64
-from functions import find_key
+from s1functions import find_key
 
 MAX_KEYSIZE = 40
 

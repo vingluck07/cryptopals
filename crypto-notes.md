@@ -1,5 +1,10 @@
 # Learning Cryptography Through Cryptopals
 
+## Reflection
+- AI was very useful in this process because the cryptopals descriptions were sometimes too complex for me to understand and the AI was able to break it down.
+- Using AI meant that I didn't have to worry so much about syntax because i could ask it for relevant functions so the focus was fully on understanding how the different cryptographic methods work rather than feeling frustrated by the code.
+- The cryptopals challenges are broken down very well so each challenge feels very feasible and is not daunting to tackle
+
 ## Set 1
 ### Challenge 1
 **Goal:** Write a function that takes the hex string given and produce the matching base64 string. (hex string -> raw bytes -> base64 string)
@@ -116,3 +121,12 @@
     - `base64.b64decode()`: turns the file data from base 64 to raw ciphertext
 
 ## Challenge 11
+**Goal:** Build an oracle and a detector. The oracle will take plaintext and append 5-10 random bytes before and after the plaintext (different count for each side), then encrypt it under a random 16-byte key and will randomly choose ECB or CBC (CBC IV will be random). The detector will call the oracle then decide whether ECB or CBC was used.
+- The detector should also record what mode it chose to confirm correctess of the detector. (the detector should not have access to the chosen mode)
+- Real data is rarely just the plaintext itself due to headers, cookies, tokens and other fillers. The added bytes before and after the plaintext is supposed to mimic that.
+- The detector gets to decide what plaintext gets to be sent to the oracle so it makes sense to choose something where any repetition would be extremely obvious (I used `b'A' * 48`).
+- If there are ANY repeat bytes at all the detector will know its ECB, otherwise it is CBC. This is because the chance of a repeat in CBC is extremely low (1 / 2^128)
+- Useful Python Tools:
+    - `random.randint(2)`: Use this for deciding ECB or CBC
+    - `os.urandom(16)`: Generates 16 random bytes. Asks the operating system for the 16 bytes which is much more secure than using the random module.
+    - `os.urandom(random.randint(5,10))`: Randomly chooses 5-10 bytes for appending and randomly chooses what those bytes will be

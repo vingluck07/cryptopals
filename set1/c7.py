@@ -2,7 +2,7 @@ import base64
 from Crypto.Cipher import AES
 
 def AES_ECB_decrypt(ciphertext, key):
-    """Decrypts the ciphertext with the key using AES-128 in ECM mode
+    """Decrypts the ciphertext with the key using AES-128 in ECB mode
         
     Args:
         ciphertext: ciphertext in bytes

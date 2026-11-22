@@ -1,6 +1,6 @@
 import base64
 from Crypto.Cipher import AES
-from functions import bytes_XOR
+from s2functions import bytes_XOR
 
 def CBC_decrypt(ciphertext, key, IV):
     """Decrypts using CBC mode on top of single block ECB, returns plaintext in bytes"""
