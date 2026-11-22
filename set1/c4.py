@@ -1,4 +1,4 @@
-from c3 import xor_one_byte, find_key
+from functions import xor_one_byte, find_key
 
 def find_XOR_encrypt(filename):
     """Finds the line that is most likely to be 1-byte XOR encryption. returns key and decrypted plaintext"""

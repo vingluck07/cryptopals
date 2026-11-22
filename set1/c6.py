@@ -1,5 +1,5 @@
 import base64
-from c3 import find_key
+from functions import find_key
 
 MAX_KEYSIZE = 40
 

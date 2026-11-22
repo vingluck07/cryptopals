@@ -103,3 +103,6 @@
     - `bytes([n])`: a single byte with the value n. (`bytes(n)` would be incorrect and gives n zero bytes)
     - `bytes * int`: repeats a byte string
     - `+`: to concatenate bytes
+
+## Challenge 10
+**Goal:** Build CBC mode on top of single block ECB and decrypt the given file using the key "YELLOW SUBMARINE" and an IV of all zero bytes without using the library's CBC mode
