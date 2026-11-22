@@ -1,4 +1,5 @@
 def PKCS7(data, block_size):
+    """Pads plaintext to fit desire block size using PKCS#7"""
     length = len(data)
     pad_amt = block_size - length % block_size
 

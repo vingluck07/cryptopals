@@ -80,7 +80,7 @@
 - Useful Python tools:
     - crypto library is required. pycryptodome is a good option
     - `AES.new(key, AES.MODE_ECB)`: creates a cipher object (usually named cipher)
-    - `.decode(ciphertext)`: Used on the cipher object, returns plaintext in bytes
+    - `.decrypt(ciphertext)`: Used on the cipher object, returns plaintext in bytes
 - Takeaways: basic decryption is easy with pycryptodome
 
 ### Challenge 8
@@ -106,3 +106,13 @@
 
 ## Challenge 10
 **Goal:** Build CBC mode on top of single block ECB and decrypt the given file using the key "YELLOW SUBMARINE" and an IV of all zero bytes without using the library's CBC mode
+- Encrypting with CBC: XOR each plaintext block with the previous ciphertext block and AES encrypt the result. For the first plaintext block, use the IV (Initialization Vector)
+- Decrypting with CBC: AES decrypt every block then XOR it with the previous blocks ciphertext (or the IV for the first block)
+- EBC had patterns because identical blocks ecrypted identically. This will help reduce the pattern.
+- Useful Python tools:
+    - `AES.new(key, AES.MODE_ECB)`: Creates a new cipher object
+    - `.decrypt(ciphertext)` and `.encrypt(plaintext)`: use on the cipher object to decrypt and encrypt the text
+    - `bytes(n)`: returns n zero bytes (used for the IV)
+    - `base64.b64decode()`: turns the file data from base 64 to raw ciphertext
+
+## Challenge 11
