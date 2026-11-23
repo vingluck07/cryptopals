@@ -130,3 +130,20 @@
     - `random.randint(2)`: Use this for deciding ECB or CBC
     - `os.urandom(16)`: Generates 16 random bytes. Asks the operating system for the 16 bytes which is much more secure than using the random module.
     - `os.urandom(random.randint(5,10))`: Randomly chooses 5-10 bytes for appending and randomly chooses what those bytes will be
+
+## Challenge 12
+**Goal:** Overall goal is to break ECB encryption by creating an oracle function and sending repeated calls to the oracle.
+- The oracle will append the given string, pad it, and encrypt it. The key will be generated randomly but will be reused once it is generated.
+- The attacker will be able to choose the start of the plaintext so it will be like this: `AES-128-ECB(your string || unknown-string, random-key)`
+- The cost of this feels very high because you need to build a unique lookup for every single byte of the secret message but it still runs pretty quickly since its a computer. runtime for lookup building is `256 * n` where n is the number of bytes in the secret message. 
+- Summarized steps for breaking ECB:
+    1. Find block size: add 1 to the input length until ciphertext length jumps, then you will know the block size
+    2. Confirm that it is ECB: Use challenge 11 detector to confirm its ECB
+    3. Build a lookup: For all 256 byte values, encrypt 15 fillers + that byte to figure out what the first byte is.
+    4. Recover the first byte: send block_size - 1 filler bytes so the output has the first byte of the secret.
+    5. Repeat: use 14 fillers + the byte you know and so on to break the rest of the message.
+    6. Stop when matching fails: this means you reached the padding
+- You can condense the coding algorithm to a pretty small chunk of code but there is a lot of room for error in that chunk. Work on it piece by piece and keep building/changing the code to accomodate for longer messages. Start with just the first byte, then a full block, then the entire message.
+- Useful Python tools:
+    - `for i in range(256): bytes([i])`: generate the candidates of byte values
+- Takeaways: this challenge is very dense and takes a lot of problem solving but it feels incredibly real in terms of breaking cryptography. We are using a legit AES encryption method and breaking it which is super cool!
