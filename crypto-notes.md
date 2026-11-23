@@ -109,7 +109,7 @@
     - `bytes * int`: repeats a byte string
     - `+`: to concatenate bytes
 
-## Challenge 10
+### Challenge 10
 **Goal:** Build CBC mode on top of single block ECB and decrypt the given file using the key "YELLOW SUBMARINE" and an IV of all zero bytes without using the library's CBC mode
 - Encrypting with CBC: XOR each plaintext block with the previous ciphertext block and AES encrypt the result. For the first plaintext block, use the IV (Initialization Vector)
 - Decrypting with CBC: AES decrypt every block then XOR it with the previous blocks ciphertext (or the IV for the first block)
@@ -120,7 +120,7 @@
     - `bytes(n)`: returns n zero bytes (used for the IV)
     - `base64.b64decode()`: turns the file data from base 64 to raw ciphertext
 
-## Challenge 11
+### Challenge 11
 **Goal:** Build an oracle and a detector. The oracle will take plaintext and append 5-10 random bytes before and after the plaintext (different count for each side), then encrypt it under a random 16-byte key and will randomly choose ECB or CBC (CBC IV will be random). The detector will call the oracle then decide whether ECB or CBC was used.
 - The detector should also record what mode it chose to confirm correctess of the detector. (the detector should not have access to the chosen mode)
 - Real data is rarely just the plaintext itself due to headers, cookies, tokens and other fillers. The added bytes before and after the plaintext is supposed to mimic that.
@@ -131,7 +131,7 @@
     - `os.urandom(16)`: Generates 16 random bytes. Asks the operating system for the 16 bytes which is much more secure than using the random module.
     - `os.urandom(random.randint(5,10))`: Randomly chooses 5-10 bytes for appending and randomly chooses what those bytes will be
 
-## Challenge 12
+### Challenge 12
 **Goal:** Overall goal is to break ECB encryption by creating an oracle function and sending repeated calls to the oracle.
 - The oracle will append the given string, pad it, and encrypt it. The key will be generated randomly but will be reused once it is generated.
 - The attacker will be able to choose the start of the plaintext so it will be like this: `AES-128-ECB(your string || unknown-string, random-key)`
@@ -147,3 +147,11 @@
 - Useful Python tools:
     - `for i in range(256): bytes([i])`: generate the candidates of byte values
 - Takeaways: this challenge is very dense and takes a lot of problem solving but it feels incredibly real in terms of breaking cryptography. We are using a legit AES encryption method and breaking it which is super cool!
+
+### Challenge 13
+**Goal:** create 4 different functions: a parser that turns `foo=bar&baz=qux&zap=zazzle` into a dict, profile_for(email) that returns encoded user profile and rejects & and =, an encrypt function that uses AES-128-ECB, a decrypt function that decrypts and parses. Final goal is to make a role=admin profile using ONLY the input to profile_for() to generate ciphertexts and the ciphertexts themselves.
+- The admin role can be created by choosing an email such that `role=` ends on a block boundary. Then the last block can be replaced with admin (padded with PKCS#7)
+- The attacker CANNOT access the decryption function, that is only for the server to check at the end
+- The point is to show that ECB produces very clear block boundaries which can be abused.
+- Useful Python tools:
+    - `str.split()`: useful for parsing
