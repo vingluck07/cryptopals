@@ -167,3 +167,6 @@
 - For this challenge, I chose to skip checking the number of blocks and if its ECB because we already did it before and we are certain of those traits.
 - The idea for this is to have a filler of length 32 (2 blocks), then you keep adding a single byte to the filler until the original 32 bytes completely fills 2 blocks. This will show in the ciphertext with 2 identical, consecutive blocks. Then you can subtract the number of bytes added from the indice of the first identical block to get the length of the prefix.
 - Doesn't need any new Python tools
+
+### Challenge 15
+**Goal:** 
