@@ -61,15 +61,15 @@ def ECB_attacker():
     known = b""
 
     for j in range(len_secret):
-        b = 16 * (j // 16) # Starting index of the current block
+        b = block_size * (j // block_size) # Starting index of the current block
 
         # Fill in the lookup dict
-        filler = b"A" * (15 - (len(known) % 16))
+        filler = b"A" * (block_size - 1 - (len(known) % block_size))
         for i in range(256):
-            lookup[i] = ECB_oracle(filler + known + bytes([i]))[b : b + 16]
+            lookup[i] = ECB_oracle(filler + known + bytes([i]))[b : b + block_size]
 
         # Recover one byte and add it to known
-        ciphertext = ECB_oracle(filler)[b : b + 16]
+        ciphertext = ECB_oracle(filler)[b : b + block_size]
 
         for key in lookup:
             if ciphertext == lookup[key]:

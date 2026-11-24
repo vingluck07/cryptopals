@@ -4,6 +4,9 @@
 - AI was very useful in this process because the cryptopals descriptions were sometimes too complex for me to understand and the AI was able to break it down.
 - Using AI meant that I didn't have to worry so much about syntax because i could ask it for relevant functions so the focus was fully on understanding how the different cryptographic methods work rather than feeling frustrated by the code.
 - The cryptopals challenges are broken down very well so each challenge feels very feasible and is not daunting to tackle
+- Cryptopals doesn't do a great job of explaining why certain things are being done and what real world scenarios it should replicate so the AI is a great supplement to that because it explains how its applicable in a real world scenario
+- I like the way the challenges build on top of each other. Some things feel very difficult at first but repetition throughout the challenges helps to sink in how to get things done. For example, setting up and using an AES cipher was difficult to understand but it is used so much that it sunk in. Also, the challenges get significantly more complex but is still feasible to tackle because the challenges prior build a very strong foundation.
+- I appreciate that some of the challenges require referring back to old challenge and reusing the code or rewriting the code to perform a slightly different function. It makes the foundation feel stronger because the simple code written in prior challenges can still be useful later on.
 
 ## Set 1
 ### Challenge 1
@@ -149,9 +152,18 @@
 - Takeaways: this challenge is very dense and takes a lot of problem solving but it feels incredibly real in terms of breaking cryptography. We are using a legit AES encryption method and breaking it which is super cool!
 
 ### Challenge 13
-**Goal:** create 4 different functions: a parser that turns `foo=bar&baz=qux&zap=zazzle` into a dict, profile_for(email) that returns encoded user profile and rejects & and =, an encrypt function that uses AES-128-ECB, a decrypt function that decrypts and parses. Final goal is to make a role=admin profile using ONLY the input to profile_for() to generate ciphertexts and the ciphertexts themselves.
+**Goal:** Create 4 different functions: a parser that turns `foo=bar&baz=qux&zap=zazzle` into a dict, profile_for(email) that returns encoded user profile and rejects & and =, an encrypt function that uses AES-128-ECB, a decrypt function that decrypts and parses. Final goal is to make a role=admin profile using ONLY the input to profile_for() to generate ciphertexts and the ciphertexts themselves.
 - The admin role can be created by choosing an email such that `role=` ends on a block boundary. Then the last block can be replaced with admin (padded with PKCS#7)
 - The attacker CANNOT access the decryption function, that is only for the server to check at the end
 - The point is to show that ECB produces very clear block boundaries which can be abused.
 - Useful Python tools:
     - `str.split()`: useful for parsing
+
+### Challenge 14
+**Goal:** Repeat challenge 12 but this time there is a random count of random bytes prepended to the plaintext.
+- The new formula is `AES-128-ECB(random-prefix || attacker-controlled || target-bytes, random-key)`
+- Replicates real systems because usually there are cookies, headers, and tokens before the plaintext.
+- If you can figure out the legnth of the prefix, then you can adjust the challenge 12 code to cut out the prefix blocks
+- For this challenge, I chose to skip checking the number of blocks and if its ECB because we already did it before and we are certain of those traits.
+- The idea for this is to have a filler of length 32 (2 blocks), then you keep adding a single byte to the filler until the original 32 bytes completely fills 2 blocks. This will show in the ciphertext with 2 identical, consecutive blocks. Then you can subtract the number of bytes added from the indice of the first identical block to get the length of the prefix.
+- Doesn't need any new Python tools
