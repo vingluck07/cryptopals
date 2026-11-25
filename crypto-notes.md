@@ -7,6 +7,7 @@
 - Cryptopals doesn't do a great job of explaining why certain things are being done and what real world scenarios it should replicate so the AI is a great supplement to that because it explains how its applicable in a real world scenario
 - I like the way the challenges build on top of each other. Some things feel very difficult at first but repetition throughout the challenges helps to sink in how to get things done. For example, setting up and using an AES cipher was difficult to understand but it is used so much that it sunk in. Also, the challenges get significantly more complex but is still feasible to tackle because the challenges prior build a very strong foundation.
 - I appreciate that some of the challenges require referring back to old challenge and reusing the code or rewriting the code to perform a slightly different function. It makes the foundation feel stronger because the simple code written in prior challenges can still be useful later on.
+- The use of AI was definitely not the best in terms of problem solving because I tended to ask it for help on what steps to take in order to solve problems. I still got a lot out of doing cryptopals from this because I was able to take what the AI gave me and actually digest what it is trying to explain through coding/troubleshooting. I think the AI usuage just depends on what you are trying to get out of these challenges. They were less "challenging" with AI use but that was what I needed for my goal which is to understand how to code basic cryptographic principles rather than really trying to challenge myself to do it from scratch. This note is more relevant in the later challenge when the problems became harder to conceptualize.
 
 ## Set 1
 ### Challenge 1
@@ -169,4 +170,24 @@
 - Doesn't need any new Python tools
 
 ### Challenge 15
-**Goal:** 
+**Goal:** Write a function that checks if padding is valid PKCS#7. If it is, strip the padding
+- Indicators of valid padding
+    - All the padding bytes are equal
+    - The number of padding bytes is equal to the value of each padding byte
+- Useful Python tools:
+    - `data[-1]`: gives the last byte as an int
+    - `data[-n:]`: gives the last n bytes
+
+### Challenge 16
+**Goal:** CBC encryption has dependencies between the blocks. So if one bit is flipped in the first block, that same bit will be flipped in the second block. We will abuse that by modifying the ciphertext to inject a statement into the decrypted plaintext.
+- Write two functions. the first one will take an input and prepend/append the given strings while quoting out ; and = characters. Then it will pad the input and encrypt with a random key. The second function will decrypt and look for `;admin=true;`
+- Some data like ; and = are important and treated like syntax. To "quote out" those symbols means to replace it with plain data that will not affect functionality of the syntax (I used percent encoding, ; -> %3B and = -> %3D)
+- Flipping a bit in a block will result in that block being scrambled when decrypting. This means we need a sacrificial block.
+- The prepended string fills blocks 0 and 1. Block 2 will be the sacrificial block, Block 3 will be the target block where ;admin=true; will be injected
+- The attacker will send the data such that there are 16 filler bytes, "?admin?true?" then another 4 filler bytes. the "?" is a placeholder to replace in the ciphertext.
+- In block 2, the bytes that correspond with the "?" placeholder in block 3 will be XOR-ed with "?" and the desired character (; or =). That means when the decrypter XORs block 2 and 3, the "?" character will cancel out and there will be left with only the desired character.
+    - The attacker will alter the ciphertext with `ciphertext[i] ^= ord("?") ^ ord(desired char)` where i is the index in block 2 that mirrors the "?" in block 3
+- Useful Python tools:
+    - `bytearray(data)`: will turn the byte string into an array so you can use indexing
+    - `ord(char)`: will get the integer value of a char and allow you to XOR it with an element of the byte array
+- Takeaways: This challenge was extremely difficult to understand conceptually because the blocks are dependent on each other in CBC. Remembering how blocks affected each other was difficult. This challenge made it clear how being able to alter the ciphertext has drastic implications on security even if it doesn't involve deciphering a secret message.

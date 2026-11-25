@@ -34,3 +34,47 @@ def CBC_encrypt(plaintext, key, IV):
         ciphertext += encrypted
 
     return ciphertext
+
+def CBC_decrypt(ciphertext, key, IV):
+    """Decrypts using CBC mode on top of single block ECB, returns plaintext in bytes"""
+    ciphertext_blocks = []
+    for i in range(0, len(ciphertext), 16):
+        ciphertext_blocks.append(ciphertext[i:i+16])
+
+    cipher = AES.new(key, AES.MODE_ECB)
+
+    plaintext = b''
+    prev = IV
+    for i in ciphertext_blocks:
+        decrypted = cipher.decrypt(i)
+        plaintext += bytes_XOR(decrypted, prev)
+        prev = i
+
+    return plaintext
+
+def validate_PKCS7(data):
+    """Takes padded data and checks if it is PKCS#7"""
+    n = data[-1]
+    padding = data[-n:]
+
+    if n > 16:
+        return False
+
+    i = 0
+    for byte in padding:
+        if byte != n:
+            return False
+        i += 1
+
+    if i != n:
+        return False
+    else:
+        return True
+
+def strip_PKCS7(data):
+    """Checks that data is padded with PKCS#7 and strips the padding"""
+    if not validate_PKCS7(data):
+        raise ValueError("padding is not valid PKCS#7")
+
+    n = data[-1]
+    return data[:-n]
